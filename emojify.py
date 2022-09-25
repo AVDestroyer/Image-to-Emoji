@@ -6,7 +6,7 @@ import os
 import re
 import shutil
 
-valid_images = {'.bmp', '.jpg', '.jpeg', '.png', '.ppm', '.pbm', '.pnm', '.pgm', '.tiff', '.tif', '.webp', }
+valid_images = {'.bmp', '.jpg', '.jpeg', '.png', '.ppm', '.pbm', '.pnm', '.pgm', '.tiff', '.tif', '.webp'}
 
 w = 0
 h = 0
@@ -33,11 +33,11 @@ def tile(filename, dir_in, dir_out):
 
 
 def nearestNeighbor(r, g, b):
-    colors = {'black': ((0, 0, 0), ":black_large_square:"), 'white': ((255, 255, 255), ":white_large_square:"),
-              'red': ((255, 0, 0), ":red_square:"), 'green': ((0, 255, 0), ":green_square:"),
-              'blue': ((0, 0, 255), ":blue_square:"), 'orange': ((255, 165, 0), ":orange_square:"),
-              'yellow': ((255, 255, 0), ":yellow_square:"), 'purple': ((106, 13, 173), ":purple_square:"),
-              'brown': ((139, 69, 19), ":brown_square:")}
+    colors = {'black': ((0, 0, 0), u"\U00002b1b"), 'white': ((255, 255, 255), u"\U00002b1c"),
+              'red': ((255, 0, 0), u"\U0001f7e5"), 'green': ((0, 255, 0), u"\U0001f7e9"),
+              'blue': ((0, 0, 255), u"\U0001f7e6"), 'orange': ((255, 165, 0), u"\U0001f7e7"),
+              'yellow': ((255, 255, 0), u"\U0001f7e8"), 'purple': ((106, 13, 173), u"\U0001f7ea"),
+              'brown': ((139, 69, 19), u"\U0001f7eb")}
 
     minDist = 255 * 3 + 1
     color = ''
@@ -68,19 +68,18 @@ os.mkdir(dirPath)
 tile(file, re.sub(f'{file}$', '', filepath), dirPath)
 
 os.chdir(dirPath)
-with open('../out.txt', 'w') as f:
+with open('../out.txt', 'w', encoding='utf-16') as f:
     for i in range(0, h - h % n, n):
         for j in range(0, w - w % n, n):
             fn = f'{filename}_{i}_{j}{ext}'
-            # print(fn)
+
             # https://stackoverflow.com/questions/43111029/how-to-find-the-average-colour-of-an-image-in-python-with-opencv
             myimg = cv2.imread(fn)
             avg_color_per_row = numpy.average(myimg, axis=0)
             avg_color = numpy.average(avg_color_per_row, axis=0)
 
-            # print(avg_color,end='')
-            emo = nearestNeighbor(avg_color[1], avg_color[2], avg_color[0])
-            # print(emoji, end = '')
-            f.write(emo)
+            emoji = nearestNeighbor(avg_color[1], avg_color[2], avg_color[0])
+            f.write(emoji)
+
         f.write('\n')
     f.close()
